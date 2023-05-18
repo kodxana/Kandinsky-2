@@ -17,6 +17,7 @@ from kandinsky2.model.prior import PriorDiffusionModel, CustomizedTokenizer
 import argparse
 from omegaconf import OmegaConf
 import clip
+import tqdm  # Added import statement
 
 def main():
     parser = argparse.ArgumentParser()
@@ -35,7 +36,11 @@ def main():
             clip_std,
         )
     diffusion = model.create_prior_diffusion()
-    print('start loading')
+    
+    # Open the training log file in write mode
+    with open('training.log', 'w') as f:
+        tqdm.write('start loading', file=f)  # Write the log to the file
+
     if config['params_path'] != '':
         model.load_state_dict(torch.load(config['params_path']))
     model = model.to(device)
